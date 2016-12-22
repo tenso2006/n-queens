@@ -197,12 +197,37 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var n = this.get('n');
+      var sum = 0;
+      var col = minorDiagonalColumnIndexAtFirstRow;
+
+      for (var row = 0; row < n; row++) {
+        if (this._isInBounds(row, col)) {
+          var myRow = this.get(row);
+          var value = myRow[col];
+          if (value === 1) {
+            sum++;
+          }
+          if (sum > 1) {
+            return true;
+          }
+        }
+        col--;
+      }
+      return false; 
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.get('n');
+      var start = this._getFirstRowColumnIndexForMinorDiagonalOn( 0, 0 );
+      var end = this._getFirstRowColumnIndexForMinorDiagonalOn (0, n + 1 );
+      for ( var i = start; i <= end; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false; 
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
