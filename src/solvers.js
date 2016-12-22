@@ -44,7 +44,7 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
 
   var traverse = function (rowNum, colNum, n) {
-    debugger;
+    
     if (rowNum === n) {
       solutionCount++;
       return;
@@ -67,31 +67,10 @@ window.countNRooksSolutions = function(n) {
     return;
   };
 
-  //n = 3;
   var solutionCount = 0; 
   var board = new Board({n: n});
 
-  //declare a function which takes 
-
-  
   traverse(0, 0, n);
-  
-
-  // for (var i = 0; i < n; i++) {
-  //   var row = board.get(i);
-  //   for (var j = 0; j < row.length; j++) {
-  //     board.togglePiece(i, j);
-  //     //
-  //     if (board.hasRowConflictAt(i)) {
-  //       //we have a conflict
-  //       board.togglePiece(i, j);
-
-  //     } else {
-  //       solutionCount++;
-  //       //i++;
-  //     }
-  //   }
-  // }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
