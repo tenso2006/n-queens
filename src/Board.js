@@ -79,12 +79,40 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      //console.log('testing single row');
+      var row = this.get(rowIndex);
+      var sum = 0;
+      for (var i = 0; i < row.length; i++) {
+        if (row[i] === 1) {
+          sum++;
+        }
+        if (sum > 1) {
+          return true;
+        }
+      }
+      return false; 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      //console.log('testing board rows');
+      //var result = false;
+      // get all rows and save as variable
+      var allRows = this.rows();
+      // for each row, call hasRowConflictAt to check for conflicts
+      // allRows.forEach(function(row, i) {
+      //   // if any conflict, break and return true
+      //   if ( this.hasRowConflictAt(i) ) {
+      //     result = true;
+      //   }
+      // }.bind(this) );
+
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+      return false; 
     },
 
 
@@ -94,12 +122,29 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var allRows = this.rows();
+      var sum = 0;
+      for (var i = 0; i < allRows.length; i++) {
+        if (allRows[i][colIndex] === 1) {
+          sum++;
+        }
+        if (sum > 1) {
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var allRows = this.rows();
+      var n = this.get('n');
+      for (var i = 0; i < n; i++ ) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -109,12 +154,40 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+      var n = this.get('n');
+      var sum = 0;
+      var col = majorDiagonalColumnIndexAtFirstRow;
+
+      for (var row = 0; row < n; row++) {
+        if (this._isInBounds(row, col)) {
+          var myRow = this.get(row);
+          var value = myRow[col];
+          if (value === 1) {
+            sum++;
+          }
+          if (sum > 1) {
+            return true;
+          }
+        }
+        col++;
+      }
+      return false; 
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.get('n');
+      var start = this._getFirstRowColumnIndexForMajorDiagonalOn( (n - 1), 0 );
+      var end = this._getFirstRowColumnIndexForMajorDiagonalOn( 0, (n - 1) );
+
+      for ( var i = start; i <= end; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+
+      return false; 
     },
 
 
