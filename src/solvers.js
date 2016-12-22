@@ -44,8 +44,8 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
 
   var traverse = function (rowNum, colNum, n) {
-
-    if (rowNum > n) {
+    debugger;
+    if (rowNum === n) {
       solutionCount++;
       return;
     }
@@ -56,27 +56,26 @@ window.countNRooksSolutions = function(n) {
 
       board.togglePiece(rowNum, j);
 
-      if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(colNum)) {
-        traverse(++rowNum, j, n);
+      if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(j)) {
+        traverse(++rowNum, 0, n);
+        board.togglePiece(--rowNum, j);
       } else {
         board.togglePiece(rowNum, j);
       }
     }
+
+    return;
   };
 
-  n = 3;
+  //n = 3;
   var solutionCount = 0; 
   var board = new Board({n: n});
 
   //declare a function which takes 
 
-  var rootRow = board.get(0);
-  debugger;
-
-  for (var i = 0; i < rootRow.length; i++) {
-    board.togglePiece(0, i);
-    traverse(1, i, n);
-  }
+  
+  traverse(0, 0, n);
+  
 
   // for (var i = 0; i < n; i++) {
   //   var row = board.get(i);
