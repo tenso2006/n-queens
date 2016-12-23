@@ -43,7 +43,7 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
 
-  var traverse = function (rowNum, colNum, n) {
+  var traverse = function (rowNum, colNum, n, k = []) {
     
     if (rowNum === n) {
       solutionCount++;
@@ -53,17 +53,20 @@ window.countNRooksSolutions = function(n) {
     var currentRow = board.get(rowNum);
 
     for (var j = 0; j < currentRow.length; j++) {
-
-      board.togglePiece(rowNum, j);
-
-      if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(j)) {
-        traverse(++rowNum, 0, n);
-        board.togglePiece(--rowNum, j);
+      if ( k.indexOf(j) !== -1 ) {
+        // do nothing
       } else {
         board.togglePiece(rowNum, j);
+        if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(j)) {
+          k.push(j);
+          traverse(++rowNum, 0, n, k);
+          k.pop();
+          board.togglePiece(--rowNum, j);
+        } else {
+          board.togglePiece(rowNum, j);
+        }
       }
     }
-
     return;
   };
 
@@ -124,7 +127,7 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0; 
 
-  var traverse = function (rowNum, colNum, n) {
+  var traverse = function (rowNum, colNum, n, k = 999) {
     
     if (rowNum === n) {
       solutionCount++;
@@ -135,16 +138,21 @@ window.countNQueensSolutions = function(n) {
 
     for (var j = 0; j < currentRow.length; j++) {
 
-      board.togglePiece(rowNum, j);
-
-      if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(j) 
-        && !board.hasMajorDiagonalConflictAt(board._getFirstRowColumnIndexForMajorDiagonalOn(rowNum, j)) 
-        && !board.hasMinorDiagonalConflictAt(board._getFirstRowColumnIndexForMinorDiagonalOn(rowNum, j))
-        ) {
-        traverse(++rowNum, 0, n);
-        board.togglePiece(--rowNum, j);
+      if (j === k || j === (k - 1) || j === (k + 1) ) {
+        // do nothing
       } else {
+
         board.togglePiece(rowNum, j);
+
+        if (!board.hasRowConflictAt(rowNum) && !board.hasColConflictAt(j) 
+          && !board.hasMajorDiagonalConflictAt(board._getFirstRowColumnIndexForMajorDiagonalOn(rowNum, j)) 
+          && !board.hasMinorDiagonalConflictAt(board._getFirstRowColumnIndexForMinorDiagonalOn(rowNum, j))
+          ) {
+          traverse(++rowNum, 0, n, j);
+          board.togglePiece(--rowNum, j);
+        } else {
+          board.togglePiece(rowNum, j);
+        }
       }
     }
 
@@ -153,7 +161,7 @@ window.countNQueensSolutions = function(n) {
 
   var board = new Board({n: n});
 
-  traverse(0, 0, n);
+  traverse(0, 0, n, 999);
 
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
